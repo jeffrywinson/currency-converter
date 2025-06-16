@@ -8,7 +8,9 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/yourusername/currency-converter.git'
+                git credentialsId: 'github-credentials',
+                    url: 'https://github.com/jeffrywinson/currency-converter.git',
+                    branch: 'main'
             }
         }
 
