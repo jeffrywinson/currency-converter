@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "yourdockerhubusername/currency-converter"
+        IMAGE_NAME = "jeffrywinson/currency-converter"
     }
 
     stages {
