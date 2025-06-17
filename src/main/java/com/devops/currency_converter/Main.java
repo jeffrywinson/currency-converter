@@ -1,18 +1,16 @@
 package com.devops.currency_converter;
 
-import java.util.Scanner;
-
 public class Main {
     public static void main(String[] args) {
         CurrencyConverter converter = new CurrencyConverter();
-        Scanner scanner = new Scanner(System.in);
+        if (args.length < 3) {
+            System.out.println("Usage: java -jar app.jar <amount> <from_currency> <to_currency>");
+            return;
+        }
 
-        System.out.print("Enter amount: ");
-        double amount = scanner.nextDouble();
-        System.out.print("From currency (USD, INR, EUR, GBP, JPY): ");
-        String from = scanner.next().toUpperCase();
-        System.out.print("To currency (USD, INR, EUR, GBP, JPY): ");
-        String to = scanner.next().toUpperCase();
+        double amount = Double.parseDouble(args[0]);
+        String from = args[1];
+        String to = args[2];
 
         try {
             double result = converter.convert(from, to, amount);
@@ -20,7 +18,5 @@ public class Main {
         } catch (IllegalArgumentException e) {
             System.out.println("Error: " + e.getMessage());
         }
-
-        scanner.close();
     }
 }

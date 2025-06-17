@@ -1,0 +1,39 @@
+---
+- name: Build and Deploy Currency Converter App
+  hosts: localhost
+  connection: local
+  become: yes
+
+  vars:
+    app_name: currency-converter
+    docker_image: jeffrywinson/currency-converter
+    host_port: 8081
+    container_port: 8080
+
+  tasks:
+    - name: Pull latest code (if needed)
+      git:
+        repo: 'https://github.com/jeffrywinson/currency-converter.git'
+        dest: "/home/jeffrywinson/currency-converter"
+      ignore_errors: true  # If already cloned
+
+    - name: Change to project directory
+      ansible.builtin.shell: cd /home/jeffrywinson/currency-converter && mvn clean package
+      args:
+        chdir: "/home/jeffrywinson/currency-converter"
+
+    - name: Build Docker image
+      ansible.builtin.shell: docker build -t {{ docker_image }} .
+      args:
+        chdir: "/home/jeffrywinson/currency-converter"
+
+    - name: Stop old container if running
+      ansible.builtin.shell: docker rm -f {{ app_name }}
+      ignore_errors: yes
+
+    - name: Run Docker container
+      ansible.builtin.shell: >
+        docker run -d --name {{ app_name }}
+        -p {{ host_port }}:{{ container_port }}
+        {{ docker_image }}
+
